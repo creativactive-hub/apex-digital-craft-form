@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Project Questionnaire</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0d;
+    --cream: #faf7f2;
+    --warm: #f0ebe1;
+    --accent: #c84b2f;
+    --accent-light: #f5e8e4;
+    --muted: #8a8178;
+    --border: #ddd8ce;
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  .header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    border: 1px solid rgba(250,247,242,0.08);
+  }
+  .header::after {
+    content: ''; position: absolute;
+    bottom: -80px; left: 30%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    border: 1px solid rgba(250,247,242,0.06);
+  }
+  .header-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-tag {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+  }
+  .header-tag::before {
+    content: ''; display: inline-block;
+    width: 20px; height: 1px; background: var(--accent);
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px); font-weight: 600;
+    line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.02em;
+  }
+  .header-sub { font-size: 15px; color: rgba(250,247,242,0.6); max-width: 480px; line-height: 1.7; }
+
+  /* Sticky bar */
+  .sticky-bar {
+    background: var(--warm);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .sticky-inner {
+    max-width: 760px; margin: 0 auto;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .progress-block { flex: 1; display: flex; align-items: center; gap: 12px; }
+  .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+  .progress-label { font-size: 12px; color: var(--muted); white-space: nowrap; font-weight: 500; }
+
+  /* Form */
+  .form-wrap { max-width: 760px; margin: 0 auto; padding: 0 40px; }
+
+  .section {
+    padding-top: 60px;
+    opacity: 0; transform: translateY(24px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.2s; }
+  .section:nth-child(3) { animation-delay: 0.3s; }
+  .section:nth-child(4) { animation-delay: 0.4s; }
+  .section:nth-child(5) { animation-delay: 0.5s; }
+  .section:nth-child(6) { animation-delay: 0.6s; }
+  .section:nth-child(7) { animation-delay: 0.7s; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 32px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--accent); font-weight: 400; min-width: 28px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+
+  .field-group { display: grid; gap: 20px; margin-bottom: 24px; }
+  .field-group.two-col { grid-template-columns: 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label { font-size: 13px; font-weight: 500; color: var(--ink); letter-spacing: 0.01em; }
+  .label-optional { font-weight: 300; color: var(--muted); font-size: 11px; margin-left: 4px; }
+  .field-hint { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+  input[type="text"], input[type="email"], input[type="url"], input[type="tel"], select, textarea {
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+    background: white; border: 1px solid var(--border); border-radius: 6px;
+    padding: 11px 14px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8178' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    padding-right: 38px; cursor: pointer;
+  }
+
+  .check-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .check-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 10px 12px; background: white;
+    border: 1px solid var(--border); border-radius: 6px;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s; font-size: 13.5px;
+  }
+  .check-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .check-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .check-item input[type="checkbox"]:checked + span { color: var(--accent); font-weight: 500; }
+  .check-item:has(input:checked) { border-color: var(--accent); background: var(--accent-light); }
+
+  .radio-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .radio-pill {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 16px; background: white;
+    border: 1px solid var(--border); border-radius: 100px;
+    cursor: pointer; font-size: 13px; transition: all 0.15s;
+  }
+  .radio-pill:hover { border-color: var(--accent); background: var(--accent-light); }
+  .radio-pill input[type="radio"] { accent-color: var(--accent); cursor: pointer; }
+  .radio-pill:has(input:checked) { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .color-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .color-field {
+    display: flex; align-items: center; gap: 8px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 12px;
+    flex: 1; min-width: 140px;
+  }
+  .color-field input[type="color"] { width: 28px; height: 28px; border: none; background: none; cursor: pointer; padding: 0; border-radius: 4px; }
+  .color-field input[type="text"] { border: none; background: none; padding: 0; font-size: 13px; box-shadow: none; width: 80px; }
+
+  .section-divider { height: 1px; background: var(--border); margin: 50px 0 0; }
+
+  /* Submit */
+  .submit-area {
+    margin-top: 32px; padding: 40px;
+    background: var(--ink); border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  .submit-text h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--cream); margin-bottom: 4px; }
+  .submit-text p { font-size: 13px; color: rgba(250,247,242,0.5); }
+  .btn-submit {
+    background: var(--accent); color: white; border: none;
+    padding: 14px 32px; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+  .success-msg {
+    display: none; margin-top: 30px; padding: 20px 24px;
+    background: var(--green-light); border: 1px solid #a5d6a7;
+    border-radius: 8px; font-size: 14px; color: var(--green); line-height: 1.6;
+  }
+
+  @media (max-width: 620px) {
+    .header { padding: 40px 24px 36px; }
+    .sticky-bar { padding: 12px 20px; }
+    .sticky-inner { gap: 12px; }
+    .form-wrap { padding: 0 24px; }
+    .field-group.two-col { grid-template-columns: 1fr; }
+    .pricing-card-header { flex-direction: column; align-items: flex-start; }
+    .pricing-body { padding: 16px 20px 4px; }
+    .pricing-note { margin: 0 20px 20px; }
+    .submit-area { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">New Project</div>
+    <h1>Website Project<br>Questionnaire</h1>
+    <p class="header-sub">Help us understand your vision so we can build something you'll love. Takes about 10–15 minutes.</p>
+  </div>
+</div>
+
+<div class="sticky-bar">
+  <div class="sticky-inner">
+    <div class="progress-block">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-label" id="progressLabel">0% complete</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="form-wrap">
+<!-- TODO: Replace the Formspree endpoint below with your own active form ID from formspree.io -->
+<form id="clientForm" action="https://formspree.io/f/xjgarqjz" method="POST" novalidate>
+
+  <!-- 1. About You -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <div>
+        <div class="section-title">About You</div>
+        <div class="section-desc">Your contact information and business basics</div>
+      </div>
+    </div>
+    <div class="field-group two-col">
+      <div class="field">
+        <label>Full Name *</label>
+        <input type="text" name="full_name" placeholder="Jane Smith" required>
+      </div>
+      <div class="field">
+        <label>Business / Brand Name *</label>
+        <input type="text" name="business_name" placeholder="Acme Co." required>
+      </div>
+    </div>
+    <div class="field-group two-col">
+      <div class="field">
+        <label>Email Address *</label>
+        <input type="email" name="email" placeholder="jane@example.com" required>
+      </div>
+      <div class="field">
+        <label>Phone Number <span class="label-optional">optional</span></label>
+        <input type="tel" name="phone" placeholder="+1 (555) 000-0000">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Industry / Niche *</label>
+        <input type="text" name="industry" placeholder="e.g. Health & Wellness, Real Estate, Photography…" required>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Existing Website <span class="label-optional">if any</span></label>
+        <input type="url" name="existing_site" placeholder="https://yoursite.com">
+        <span class="field-hint">Share your current site so we can see what's working and what to improve.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 2. Project Goals -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <div>
+        <div class="section-title">Project Goals</div>
+        <div class="section-desc">What does success look like for this website?</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>What type of website do you need? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="site_type" value="business"> <span>Business / Corporate</span></label>
+          <label class="radio-pill"><input type="radio" name="site_type" value="portfolio"> <span>Portfolio</span></label>
+          <label class="radio-pill"><input type="radio" name="site_type" value="blog"> <span>Blog / Content</span></label>
+          <label class="radio-pill"><input type="radio" name="site_type" value="landing"> <span>Landing Page</span></label>
+          <label class="radio-pill"><input type="radio" name="site_type" value="other"> <span>Other</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>What are the 3 main goals of this website? *</label>
+        <textarea name="goals" placeholder="e.g. 1. Generate leads from local searches. 2. Showcase my portfolio to agencies. 3. Let clients book consultations online." required></textarea>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Who is your target audience? *</label>
+        <textarea name="audience" placeholder="Describe your ideal visitor — their age, profession, pain points, what they're looking for…" style="min-height:80px" required></textarea>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>What action should visitors take on the site? *</label>
+        <input type="text" name="cta" placeholder="e.g. Book a call, Sign up for newsletter, Fill out a form…" required>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 3. Pages & Features -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <div>
+        <div class="section-title">Pages & Features</div>
+        <div class="section-desc">What pages and functionality do you need?</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Which pages do you need? (select all that apply)</label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox" name="pages" value="home"><span>Home</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="about"><span>About / Team</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="services"><span>Services / Offerings</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="portfolio"><span>Portfolio / Work</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="pricing"><span>Pricing</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="blog"><span>Blog</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="contact"><span>Contact</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="faq"><span>FAQ</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="testimonials"><span>Testimonials</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="booking"><span>Booking / Scheduling</span></label>
+          <label class="check-item"><input type="checkbox" name="pages" value="legal"><span>Privacy / Terms</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Special features needed? (select all that apply)</label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox" name="features" value="contact_form"><span>Contact Form</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="newsletter"><span>Email Newsletter</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="search"><span>Site Search</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="map"><span>Google Map</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="multilang"><span>Multi-Language</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="seo"><span>SEO Setup</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="speed"><span>Speed Optimisation</span></label>
+          <label class="check-item"><input type="checkbox" name="features" value="cms"><span>CMS / Easy Editing</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 4. Design & Brand -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <div>
+        <div class="section-title">Design & Brand</div>
+        <div class="section-desc">Help us capture your visual identity</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>What tone / vibe should the site feel? *</label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox" name="vibe" value="professional"><span>Professional</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="playful"><span>Playful</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="minimal"><span>Clean & Minimal</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="bold"><span>Bold & Energetic</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="warm"><span>Warm & Friendly</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="luxury"><span>Luxury / High-end</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="tech"><span>Tech / Modern</span></label>
+          <label class="check-item"><input type="checkbox" name="vibe" value="creative"><span>Artistic / Creative</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Do you have existing brand assets? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="has_brand" value="full"> <span>Yes — logo, fonts, colors, guidelines</span></label>
+          <label class="radio-pill"><input type="radio" name="has_brand" value="partial"> <span>Partial — some assets only</span></label>
+          <label class="radio-pill"><input type="radio" name="has_brand" value="none"> <span>No — starting from scratch</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Brand Colors <span class="label-optional">enter hex codes or pick</span></label>
+        <div class="color-row">
+          <div class="color-field">
+            <input type="color" id="c1" value="#c84b2f" oninput="document.getElementById('h1').value=this.value">
+            <input type="text" id="h1" placeholder="#c84b2f" oninput="document.getElementById('c1').value=this.value">
+          </div>
+          <div class="color-field">
+            <input type="color" id="c2" value="#0f0e0d" oninput="document.getElementById('h2').value=this.value">
+            <input type="text" id="h2" placeholder="#0f0e0d" oninput="document.getElementById('c2').value=this.value">
+          </div>
+          <div class="color-field">
+            <input type="color" id="c3" value="#faf7f2" oninput="document.getElementById('h3').value=this.value">
+            <input type="text" id="h3" placeholder="#faf7f2" oninput="document.getElementById('c3').value=this.value">
+          </div>
+        </div>
+        <input type="hidden" name="colors" id="colorsHidden">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Websites you love or want yours to look like</label>
+        <textarea name="inspiration" placeholder="Share URLs or describe what you like about them — layout, colors, photography style, vibe…" style="min-height:80px"></textarea>
+        <span class="field-hint">Even sites outside your industry are helpful. E.g. "I love the minimal layout of stripe.com and the warm photography of casualcountry.com"</span>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Any websites you strongly dislike and why? <span class="label-optional">optional</span></label>
+        <textarea name="anti_inspiration" placeholder="e.g. Avoid dark backgrounds, don't use clip art, no auto-playing videos…" style="min-height:70px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 5. Content -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <div>
+        <div class="section-title">Content</div>
+        <div class="section-desc">Text, images, and media for the site</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Will you provide written copy? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="copy_source" value="client"> <span>Yes — I'll write it</span></label>
+          <label class="radio-pill"><input type="radio" name="copy_source" value="ai"> <span>Help me write it with AI</span></label>
+          <label class="radio-pill"><input type="radio" name="copy_source" value="both"> <span>Mix — some I'll provide, some AI</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Will you provide photos / videos? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="media_source" value="client"> <span>Yes — I have my own</span></label>
+          <label class="radio-pill"><input type="radio" name="media_source" value="stock"> <span>Use stock photos</span></label>
+          <label class="radio-pill"><input type="radio" name="media_source" value="mix"> <span>Mix of above</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Describe your business in a few sentences *</label>
+        <textarea name="business_desc" placeholder="What do you do, who do you serve, and what makes you different from competitors?" required></textarea>
+        <span class="field-hint">This helps us write compelling copy if needed.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 6. Technical -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <div>
+        <div class="section-title">Technical Details</div>
+        <div class="section-desc">Domain, hosting, and tech preferences</div>
+      </div>
+    </div>
+    <div class="field-group two-col">
+      <div class="field">
+        <label>Do you have a domain name? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="has_domain" value="yes"> <span>Yes</span></label>
+          <label class="radio-pill"><input type="radio" name="has_domain" value="no"> <span>No — need one</span></label>
+          <label class="radio-pill"><input type="radio" name="has_domain" value="decide"> <span>Not decided</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Domain name (if you have one) <span class="label-optional">optional</span></label>
+        <input type="text" name="domain" placeholder="yourdomain.com">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Do you have a hosting provider? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="has_hosting" value="yes"> <span>Yes — I have one</span></label>
+          <label class="radio-pill"><input type="radio" name="has_hosting" value="no"> <span>No — need a recommendation</span></label>
+          <label class="radio-pill"><input type="radio" name="has_hosting" value="unsure"> <span>Not sure</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Preferred tech stack <span class="label-optional">optional — we can advise</span></label>
+        <select name="tech_stack">
+          <option value="">— No preference / advise me —</option>
+          <option value="html_css">Plain HTML / CSS / JS</option>
+          <option value="react">React</option>
+          <option value="nextjs">Next.js</option>
+          <option value="wordpress">WordPress</option>
+          <option value="webflow">Webflow</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 7. Timeline -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <div>
+        <div class="section-title">Timeline</div>
+        <div class="section-desc">So we can plan and scope accurately</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>How urgently do you need this? *</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="urgency" value="asap"> <span>ASAP — within 2 weeks</span></label>
+          <label class="radio-pill"><input type="radio" name="urgency" value="month"> <span>Within a month</span></label>
+          <label class="radio-pill"><input type="radio" name="urgency" value="flexible"> <span>Flexible — no rush</span></label>
+        </div>
+        <span class="field-hint">Rush timelines may incur a priority fee.</span>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Desired launch date <span class="label-optional">optional</span></label>
+        <input type="text" name="launch_date" placeholder="e.g. End of July, before Q4, before our event on Oct 3…">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Anything else we should know? <span class="label-optional">optional</span></label>
+        <textarea name="extra_notes" placeholder="Special requirements, previous bad experiences with developers, must-haves or dealbreakers…" style="min-height:80px"></textarea>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>How did you hear about us? <span class="label-optional">optional</span></label>
+        <select name="referral">
+          <option value="">Select…</option>
+          <option value="instagram">Instagram</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="referral">Friend / Referral</option>
+          <option value="google">Google Search</option>
+          <option value="upwork">Upwork / Freelance Platform</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="submit-area">
+    <div class="submit-text">
+      <h3>All done?</h3>
+      <p>We'll review your answers and reach out within 1–2 business days.</p>
+    </div>
+    <button type="submit" class="btn-submit">Submit Questionnaire →</button>
+  </div>
+
+  <div class="success-msg" id="successMsg">
+    ✅ <strong>Thank you!</strong> Your questionnaire has been submitted. We'll review your selections and reach out within 1–2 business days to discuss your project and provide a confirmed quote.
+  </div>
+
+</form>
+</div>
+
+<script>
+  function updateProgress() {
+    const names = new Set();
+    document.querySelectorAll('[required]').forEach(el => names.add(el.name));
+    document.querySelectorAll('input[type="radio"]').forEach(el => names.add(el.name));
+
+    let filled = 0;
+    names.forEach(name => {
+      const els = document.querySelectorAll(`[name="${name}"]`);
+      if (!els.length) return;
+      if (els[0].type === 'radio') {
+        if (document.querySelector(`[name="${name}"]:checked`)) filled++;
+      } else {
+        if (els[0].value.trim()) filled++;
+      }
+    });
+
+    const pct = Math.round((filled / names.size) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = pct + '% complete';
+  }
+
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', updateProgress);
+    el.addEventListener('change', updateProgress);
+  });
+
+  ['c1','c2','c3','h1','h2','h3'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const v = [
+        document.getElementById('h1').value || document.getElementById('c1').value,
+        document.getElementById('h2').value || document.getElementById('c2').value,
+        document.getElementById('h3').value || document.getElementById('c3').value,
+      ];
+      document.getElementById('colorsHidden').value = v.filter(Boolean).join(', ');
+    });
+  });
+
+  document.getElementById('clientForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let firstInvalid = null;
+
+    // Validate required text/email/textarea/select fields
+    this.querySelectorAll('[required]').forEach(el => {
+      if (!el.value.trim()) {
+        el.style.borderColor = '#e53935';
+        if (!firstInvalid) firstInvalid = el;
+      } else {
+        el.style.borderColor = '';
+      }
+    });
+
+    // Validate required radio groups (marked with * in label)
+    const requiredRadioGroups = ['site_type', 'has_brand', 'copy_source', 'media_source', 'has_domain', 'has_hosting', 'urgency'];
+    requiredRadioGroups.forEach(name => {
+      const pills = document.querySelectorAll(`.radio-pills input[name="${name}"]`);
+      const container = pills[0] ? pills[0].closest('.radio-pills') : null;
+      if (!container) return;
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      if (!checked) {
+        container.style.outline = '2px solid #e53935';
+        container.style.borderRadius = '8px';
+        if (!firstInvalid) firstInvalid = container;
+      } else {
+        container.style.outline = '';
+      }
+    });
+
+    // Validate vibe checkboxes (at least one required)
+    const vibeChecked = document.querySelectorAll('input[name="vibe"]:checked');
+    const vibeGrid = document.querySelector('input[name="vibe"]').closest('.check-grid');
+    if (vibeChecked.length === 0) {
+      vibeGrid.style.outline = '2px solid #e53935';
+      vibeGrid.style.borderRadius = '8px';
+      if (!firstInvalid) firstInvalid = vibeGrid;
+    } else {
+      vibeGrid.style.outline = '';
+    }
+
+    if (firstInvalid) { firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    }).then(res => {
+      if (res.ok) {
+        btn.textContent = 'Submitted ✓';
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        btn.textContent = 'Submit Questionnaire →';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again or email us directly.');
+      }
+    }).catch(() => {
+      btn.textContent = 'Submit Questionnaire →';
+      btn.disabled = false;
+      alert('Network error. Please check your connection and try again.');
+    });
+  });
+</script>
+</body>
+</html>
